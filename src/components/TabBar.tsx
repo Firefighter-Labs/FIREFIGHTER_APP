@@ -1,11 +1,12 @@
 import { useAppStore } from '../store/useAppStore';
 import type { TabId } from '../types';
+import { IconHistory, IconHome, IconPortfolio, IconSettings } from './ui/Icons';
 
-const TABS: { id: TabId; label: string; icon: string }[] = [
-  { id: 'fire', label: '탈출', icon: '🔥' },
-  { id: 'dividend', label: '배당', icon: '📅' },
-  { id: 'community', label: '비밀방', icon: '🛡️' },
-  { id: 'settings', label: '설정', icon: '⚙️' },
+const TABS: { id: TabId; label: string; Icon: typeof IconHome }[] = [
+  { id: 'home', label: '홈', Icon: IconHome },
+  { id: 'portfolio', label: '포트폴리오', Icon: IconPortfolio },
+  { id: 'history', label: '내역', Icon: IconHistory },
+  { id: 'settings', label: '설정', Icon: IconSettings },
 ];
 
 export function TabBar() {
@@ -13,21 +14,24 @@ export function TabBar() {
   const setTab = useAppStore((s) => s.setTab);
 
   return (
-    <nav className="tab-bar" aria-label="메인 탭">
-      {TABS.map((t) => (
-        <button
-          key={t.id}
-          type="button"
-          className={`tab-btn ${activeTab === t.id ? 'active' : ''}`}
-          onClick={() => setTab(t.id)}
-          aria-current={activeTab === t.id ? 'page' : undefined}
-        >
-          <span className="icon" aria-hidden>
-            {t.icon}
-          </span>
-          {t.label}
-        </button>
-      ))}
+    <nav className="tab-bar" aria-label="메인">
+      {TABS.map(({ id, label, Icon }) => {
+        const active = activeTab === id;
+        return (
+          <button
+            key={id}
+            type="button"
+            className={`tab-bar__btn ${active ? 'active' : ''}`}
+            onClick={() => setTab(id)}
+            aria-current={active ? 'page' : undefined}
+          >
+            <span className={`tab-bar__icon ${active ? 'tab-bar__icon--active' : ''}`}>
+              <Icon />
+            </span>
+            <span className="tab-bar__label">{label}</span>
+          </button>
+        );
+      })}
     </nav>
   );
 }

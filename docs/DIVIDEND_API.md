@@ -30,7 +30,7 @@ VITE_FINNHUB_API_KEY=...    # 종목 검색
 
 ## 환율 (USD → KRW)
 
-- **Frankfurter API** (`api.frankfurter.app`) — 키 없이 USD/KRW 조회, **30분 캐시**
+- **Frankfurter API** (`/api/fx` → `api.frankfurter.dev`) — 키 없이 USD/KRW 조회, **30분 캐시**
 - 실패 시 마지막 캐시 또는 **1,350원** fallback
 - 배당 탭 상단 **💱** 버튼으로 수동 새로고침
 

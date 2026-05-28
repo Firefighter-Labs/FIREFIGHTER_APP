@@ -1,106 +1,57 @@
-export type Currency = 'KRW' | 'USD';
+export type TabId = 'home' | 'portfolio' | 'history' | 'settings';
 
-export type TabId = 'fire' | 'dividend' | 'community' | 'settings';
+export type HomeView = 'cumulative' | 'year' | 'dividend';
 
-export type BadgeTier =
-  | '소방훈련생'
-  | '견습소방관'
-  | '초급소방관'
-  | '중급소방관'
-  | '고급소방관'
-  | '전설의 소방대장';
+export type HistoryKind = 'balance' | 'dividend' | 'cashflow';
 
-/** 배당 세후 수령액 추정 (간이 모델) */
-export interface DividendTaxSettings {
-  /** true: 중소형 등 감면 세율(krExemptionTaxPct) 적용 가정 */
-  useKrExemption: boolean;
-  /** 국내 분리과세 (%) */
-  krSeparateTaxPct: number;
-  /** 국내 감면 적용 시 유효 세율 (%) — 종목·요건별로 다름 */
-  krExemptionTaxPct: number;
-  /** 미국 ETF/주식 원천징수 (%) */
-  usWithholdingPct: number;
-}
+export type DividendFrequency = 'monthly' | 'quarterly' | 'semiannual' | 'annual';
 
-export interface FireSettings {
-  totalAssets: number;
-  currency: Currency;
-  monthlySavings: number;
-  monthlyExpense: number;
-  /** 은퇴 후 연간 인출률 (%) — 고급·참고용, 배당 FIRE와 별개 */
-  withdrawalRatePct: number;
-  /** 저축 → 배당주 매수 시 가정 배당 수익률 (%) */
-  assumedDividendYieldPct: number;
-  stockRatio: number;
-  cashRatio: number;
-}
-
-export interface StockHolding {
+/** 배당 종목 */
+export interface Holding {
   id: string;
-  symbol: string;
   name: string;
-  shares: number;
-  market: 'KR' | 'US';
+  /** 티커 (예: SCHD, 005930) */
+  symbol?: string;
+  market?: 'KR' | 'US';
+  logoUrl?: string;
+  annualDividendKRW: number;
+  frequency: DividendFrequency;
+  nextPayMonth?: number;
+  shares?: number;
+  marketValueKRW?: number;
+  costBasisKRW?: number;
+  /** 미국 종목: 주당 연간 배당 (USD) */
+  annualDividendUSD?: number;
+  /** 미국 종목: 평가금액 (USD) */
+  marketValueUSD?: number;
+  /** 미국 종목: 총 매수금 (USD) */
+  costBasisUSD?: number;
 }
 
-export interface DividendEvent {
-  symbol: string;
-  name: string;
-  exDate: string;
-  payDate: string;
-  amountPerShare: number;
-  currency: 'KRW' | 'USD';
-}
-
-export type PostType = 'cert' | 'question' | 'win' | 'tip';
-
-export interface PostFireStats {
-  coveragePct: number;
-  monthlyNetKRW: number;
-  holdingsCount: number;
-  tier: BadgeTier;
-}
-
-export interface PostComment {
+export interface ExpenseCategory {
   id: string;
-  postId: string;
-  content: string;
-  createdAt: number;
-  authorLabel?: string;
-  isMine?: boolean;
-}
-
-export interface CommunityPost {
-  id: string;
-  content: string;
-  createdAt: number;
-  postType: PostType;
-  attachPortfolio: boolean;
-  attachFireStats: boolean;
-  fireStats?: PostFireStats;
-  likes: number;
-  commentCount: number;
-  badgeTier?: BadgeTier;
-  stockRatio?: number;
-  cashRatio?: number;
-  likedByMe?: boolean;
-  authorLabel?: string;
-  isMine?: boolean;
-}
-
-export interface ChatMessage {
-  id: string;
-  text: string;
-  at: number;
-  authorLabel?: string;
-  isMine?: boolean;
-}
-
-export type DataMode = 'local' | 'cloud';
-
-export interface ExpenseBreakdownItem {
   label: string;
-  amount: number;
-  covered: boolean;
-  partial: number;
+  amountKRW: number;
 }
+
+/** 내역 탭 기록 */
+export interface HistoryEntry {
+  id: string;
+  kind: HistoryKind;
+  year: number;
+  month: number;
+  amountKRW: number;
+  note?: string;
+}
+
+export interface FireGoals {
+  userName: string;
+  currentAge: number;
+  targetFireAge: number;
+  totalAssetsKRW: number;
+  monthlyExpenseFallback: number;
+  monthlyInvestmentKRW: number;
+  assumedYieldPct: number;
+}
+
+export const FREE_HOLDING_LIMIT = 5;

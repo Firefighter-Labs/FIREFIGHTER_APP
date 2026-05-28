@@ -1,22 +1,21 @@
+import type { ReactNode } from 'react';
+
 interface EmptyStateProps {
-  icon: string;
+  icon: ReactNode;
   title: string;
   description: string;
-  actionLabel?: string;
-  onAction?: () => void;
+  action?: { label: string; onClick: () => void };
 }
 
-export function EmptyState({ icon, title, description, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
     <div className="empty-state">
-      <span className="empty-state__icon" aria-hidden>
-        {icon}
-      </span>
-      <h3>{title}</h3>
-      <p>{description}</p>
-      {actionLabel && onAction && (
-        <button type="button" className="btn-primary" onClick={onAction}>
-          {actionLabel}
+      <div className="empty-state__icon">{icon}</div>
+      <h3 className="empty-state__title">{title}</h3>
+      <p className="empty-state__desc">{description}</p>
+      {action && (
+        <button type="button" className="btn-cta" onClick={action.onClick}>
+          {action.label}
         </button>
       )}
     </div>
