@@ -1,11 +1,11 @@
 {
   "name": "FIREFIGHTER",
   "short_name": "FIREFIGHTER",
-  "description": "파이어족 은퇴·배당·자산 인증 커뮤니티",
+  "description": "배당으로 월 생활비 몇 %를 커버하는지 보는 파이어족 트래커",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0f12",
-  "theme_color": "#0d0f12",
+  "background_color": "#f4f5f7",
+  "theme_color": "#f4f5f7",
   "orientation": "portrait",
   "lang": "ko",
   "icons": [

@@ -1,23 +1,35 @@
 import { useCallback, useEffect, useState } from 'react';
-import { fetchUsdKrwRate, getCachedUsdKrwRate } from '../services/exchangeRateService';
+import {
+  fetchUsdKrwRate,
+  getCachedUsdKrwRate,
+  invalidateUsdKrwCache,
+} from '../services/exchangeRateService';
 
 export function useUsdKrwRate() {
-  const [usdKrw, setUsdKrw] = useState(getCachedUsdKrwRate());
+  const [usdKrw, setUsdKrw] = useState(getCachedUsdKrwRate);
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
-    setLoading(true);
-    try {
-      const rate = await fetchUsdKrwRate();
-      setUsdKrw(rate);
-    } finally {
-      setLoading(false);
-    }
+    invalidateUsdKrwCache();
+    const rate = await fetchUsdKrwRate();
+    setUsdKrw(rate);
+    return rate;
   }, []);
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let cancelled = false;
+    setLoading(true);
+    fetchUsdKrwRate()
+      .then((rate) => {
+        if (!cancelled) setUsdKrw(rate);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return { usdKrw, loading, refresh };
 }
